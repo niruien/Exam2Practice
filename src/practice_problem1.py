@@ -43,11 +43,11 @@ def main():
     run_test_append_string()
     run_test_double()
     run_test_shrink()
-#     run_test_double_then_shrink()
-#     run_test_reset()
-#     run_test_steal()
-#     run_test_get_history()
-#     run_test_combined_box()
+    run_test_double_then_shrink()
+    run_test_reset()
+    run_test_steal()
+    run_test_get_history()
+    run_test_combined_box()
 
 
 ########################################################################
@@ -108,6 +108,10 @@ class Box(object):
             self.contents = contents
         else:
             self.contents = ''
+
+        self.originalv = self.volume
+        self.originalc = self.contents
+        self.history = []
 
     def append_string(self, additional_contents):
         """
@@ -263,7 +267,7 @@ class Box(object):
           :type new_volume: int
         """
         # --------------------------------------------------------------
-        # TODO: 5. Implement and test this function.
+        # DONE: 5. Implement and test this function.
         #     The testing code is already written for you (above).
         # --------------------------------------------------------------
         # --------------------------------------------------------------
@@ -275,13 +279,17 @@ class Box(object):
         # and THEN translate the pseudo-code to a solution.
         # --------------------------------------------------------------
 
+        s = ''
+        original = self.contents
         self.volume = new_volume
-        number_to_clip = self.volume - new_volume
-        stuff_to_clip = ''
-        for k in range(number_to_clip):
-            stuff_to_clip = stuff_to_clip + 
 
-
+        if new_volume < len(self.contents):
+            self.contents = ''
+            for k in range(new_volume):
+                self.contents += original[k]
+            for k in range(new_volume, len(original)):
+                s += original[k]
+        return s
 
 
     def double_then_shrink(self, new_volume):
@@ -328,7 +336,7 @@ class Box(object):
           :type new_volume: int
         """
         # --------------------------------------------------------------
-        # TODO: 6. Implement and test this function.
+        # DONE: 6. Implement and test this function.
         #     The testing code is already written for you (above).
         # --------------------------------------------------------------
         # --------------------------------------------------------------
@@ -336,6 +344,15 @@ class Box(object):
         #    DIFFICULTY:      5
         #    TIME ESTIMATE:   5 minutes.
         # --------------------------------------------------------------
+
+        ori = self.contents
+        self.double()
+        self.shrink(new_volume)
+        shrink = self.contents
+        n = 2 * len(ori) - len(shrink)
+        return n
+
+
 
     def reset(self):
         """
@@ -347,7 +364,7 @@ class Box(object):
           when this Box was constructed.
         """
         # --------------------------------------------------------------
-        # TODO: 7. Implement and test this function.
+        # DONE: 7. Implement and test this function.
         #     The testing code is already written for you (above).
         # --------------------------------------------------------------
         # --------------------------------------------------------------
@@ -355,6 +372,10 @@ class Box(object):
         #    DIFFICULTY:      4
         #    TIME ESTIMATE:   5 minutes.
         # --------------------------------------------------------------
+        self.history = self.history + [self.contents]
+        self.contents = self.originalc
+        self.volume = self.originalv
+
 
     def steal(self, other_box):
         """
@@ -375,7 +396,7 @@ class Box(object):
           :type other_box: Box
         """
         # --------------------------------------------------------------
-        # TODO: 8. Implement and test this function.
+        # DONE: 8. Implement and test this function.
         #     The testing code is already written for you (above).
         # --------------------------------------------------------------
         # --------------------------------------------------------------
@@ -387,6 +408,8 @@ class Box(object):
         # FOR FULL CREDIT, YOUR SOLUTION MUST BE NO MORE THAN
         #    ** TWO **   LINES OF CODE.
         ################################################################
+
+        other_box.contents = self.append_string(other_box.contents)
 
     def get_history(self):
         """
@@ -418,7 +441,7 @@ class Box(object):
           #   h is now ['GoodGo', 'GoodBye']
         """
         # --------------------------------------------------------------
-        # TODO: 9. Implement and test this function.
+        # DONE: 9. Implement and test this function.
         #     The testing code is already written for you (above).
         # --------------------------------------------------------------
         # --------------------------------------------------------------
@@ -426,6 +449,8 @@ class Box(object):
         #    DIFFICULTY:      6
         #    TIME ESTIMATE:   5 minutes.
         # --------------------------------------------------------------
+
+        return self.history
 
     def combined_box(self, other_box):
         """
@@ -444,7 +469,7 @@ class Box(object):
           :type other_box: Box
         """
         # --------------------------------------------------------------
-        # TODO: 10. Implement and test this function.
+        # DONE: 10. Implement and test this function.
         #     The testing code is already written for you (above).
         # --------------------------------------------------------------
         # --------------------------------------------------------------
@@ -452,6 +477,9 @@ class Box(object):
         #    DIFFICULTY:      4
         #    TIME ESTIMATE:   5 minutes.
         # --------------------------------------------------------------
+
+        return Box(self.contents + other_box.contents, self.volume +
+                   other_box.volume)
 
 
 ########################################################################
